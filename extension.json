@@ -1,0 +1,13 @@
+{
+  "name": "MPU6050 data analyzer",
+  "apiVersion": "1.0.0",
+  "author": "Hussein Elsherbini",
+  "version": "0.0.1",
+  "description": "Analyzes Data from MPU6050 across an I2C bus",
+  "extensions": {
+    "MPU6050 data analyzer": {
+      "type": "HighLevelAnalyzer",
+      "entryPoint": "HighLevelAnalyzer.Hla"
+    }
+  }
+}
