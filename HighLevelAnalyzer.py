@@ -19,23 +19,23 @@ class Hla(HighLevelAnalyzer):
         self.address = 0
         self.read_write = ''
         self.current_register = ''
-
+        self.id = ''
         self.registers = {
             0x00: {'name': 'RA_XG_OFFS_TC', 'alias': 'XG OFFSET TC'},
             0x01: {'name': 'RA_YG_OFFS_TC', 'alias': 'YG OFFSET TC'},
             0x02: {'name': 'RA_ZG_OFFS_TC', 'alias': 'ZG OFFSET TC'},
             0x06: {'name': 'RA_XA_OFFS_H', 'alias':  'XA OFFSET'},
             0x08: {'name': 'RA_YG_OFFS_TC', 'alias': 'YA OFFSET'},           
-            0x0A: {'name': 'RA_ZG_OFFS_TC', 'alias': 'ZA OFFSET'},
+            0x0a: {'name': 'RA_ZG_OFFS_TC', 'alias': 'ZA OFFSET'},
             0x13: {'name': 'RA_XG_OFFS',    'alias': 'XG OFFSET'},
             0x15: {'name': 'RA_YG_OFFS',    'alias': 'YG OFFSET'},
             0x17: {'name': 'RA_ZG_OFFS',    'alias': 'ZG OFFSET'},
-            0x0D: {'name': 'SELF_TEST_X', 'alias': 'Self-Test Registers - X-axis'},
-            0x0E: {'name': 'SELF_TEST_Y', 'alias': 'Self-Test Registers - Y-axis'},
-            0x0F: {'name': 'SELF_TEST_Z', 'alias': 'Self-Test Registers - Z-axis'},
+            0x0d: {'name': 'SELF_TEST_X', 'alias': 'Self-Test Registers - X-axis'},
+            0x0e: {'name': 'SELF_TEST_Y', 'alias': 'Self-Test Registers - Y-axis'},
+            0x0f: {'name': 'SELF_TEST_Z', 'alias': 'Self-Test Registers - Z-axis'},
             0x10: {'name': 'SELF_TEST_A', 'alias': 'Self-Test Register - Accelerometer'},
             0x19: {'name': 'SMPLRT_DIV', 'alias': 'Sample Rate Divider'},
-            0x1A: {'name': 'CONFIG', 'alias': 'Configuration', 'fields': {
+            0x1a: {'name': 'CONFIG', 'alias': 'Configuration', 'fields': {
                 'EXT_SYNC_SET': {
                     0: 'Input Disabled',
                     1: 'TEMP_OUT_L[0]',
@@ -57,7 +57,7 @@ class Hla(HighLevelAnalyzer):
                     7: 'Reserved'
                 }
             }},
-            0x1B: {'name': 'GYRO_CONFIG', 'alias': 'Gyroscope Configuration', 'fields': {
+            0x1b: {'name': 'GYRO_CONFIG', 'alias': 'Gyroscope Configuration', 'fields': {
                 'FS_SEL': {
                     0: '±250 °/s',
                     1: '±500 °/s',
@@ -65,7 +65,7 @@ class Hla(HighLevelAnalyzer):
                     3: '±2000 °/s'
                 }
             }},
-            0x1C: {'name': 'ACCEL_CONFIG', 'alias': 'Accelerometer Configuration', 'fields': {
+            0x1c: {'name': 'ACCEL_CONFIG', 'alias': 'Accelerometer Configuration', 'fields': {
                 'AFS_SEL': {
                     0: '±2g',
                     1: '±4g',
@@ -99,12 +99,12 @@ class Hla(HighLevelAnalyzer):
             0x27: {'name': 'I2C_SLV0_CTRL', 'alias': 'I2C Slave 0 Control'},
             0x28: {'name': 'I2C_SLV1_ADDR', 'alias': 'I2C Slave 1 Address'},
             0x29: {'name': 'I2C_SLV1_REG', 'alias': 'I2C Slave 1 Register'},
-            0x2A: {'name': 'I2C_SLV1_CTRL', 'alias': 'I2C Slave 1 Control'},
-            0x2B: {'name': 'I2C_SLV2_ADDR', 'alias': 'I2C Slave 2 Address'},
-            0x2C: {'name': 'I2C_SLV2_REG', 'alias': 'I2C Slave 2 Register'},
-            0x2D: {'name': 'I2C_SLV2_CTRL', 'alias': 'I2C Slave 2 Control'},
-            0x2E: {'name': 'I2C_SLV3_ADDR', 'alias': 'I2C Slave 3 Address'},
-            0x2F: {'name': 'I2C_SLV3_REG', 'alias': 'I2C Slave 3 Register'},
+            0x2a: {'name': 'I2C_SLV1_CTRL', 'alias': 'I2C Slave 1 Control'},
+            0x2b: {'name': 'I2C_SLV2_ADDR', 'alias': 'I2C Slave 2 Address'},
+            0x2c: {'name': 'I2C_SLV2_REG', 'alias': 'I2C Slave 2 Register'},
+            0x2d: {'name': 'I2C_SLV2_CTRL', 'alias': 'I2C Slave 2 Control'},
+            0x2e: {'name': 'I2C_SLV3_ADDR', 'alias': 'I2C Slave 3 Address'},
+            0x2f: {'name': 'I2C_SLV3_REG', 'alias': 'I2C Slave 3 Register'},
             0x30: {'name': 'I2C_SLV3_CTRL', 'alias': 'I2C Slave 3 Control'},
             0x31: {'name': 'I2C_SLV4_ADDR', 'alias': 'I2C Slave 4 Address'},
             0x32: {'name': 'I2C_SLV4_REG', 'alias': 'I2C Slave 4 Register'},
@@ -114,12 +114,12 @@ class Hla(HighLevelAnalyzer):
             0x36: {'name': 'I2C_MST_STATUS', 'alias': 'I2C Master Status'},
             0x37: {'name': 'INT_PIN_CFG', 'alias': 'INT Pin / Bypass Enable Configuration'},
             0x38: {'name': 'INT_ENABLE', 'alias': 'Interrupt Enable'},
-            0x3A: {'name': 'INT_STATUS', 'alias': 'Interrupt Status'},
-            0x3B: {'name': 'ACCEL_XOUT_H', 'alias': 'Accelerometer and Gyroscope Measurements'},
-            0x3C: {'name': 'ACCEL_XOUT_L', 'alias': 'Accelerometer Measurements - X-axis (Low Byte)'},
-            0x3D: {'name': 'ACCEL_YOUT_H', 'alias': 'Accelerometer Measurements - Y-axis (High Byte)'},
-            0x3E: {'name': 'ACCEL_YOUT_L', 'alias': 'Accelerometer Measurements - Y-axis (Low Byte)'},
-            0x3F: {'name': 'ACCEL_ZOUT_H', 'alias': 'Accelerometer Measurements - Z-axis (High Byte)'},
+            0x3a: {'name': 'INT_STATUS', 'alias': 'Interrupt Status'},
+            0x3b: {'name': 'ACCEL_XOUT_H', 'alias': 'Accelerometer and Gyroscope Measurements'},
+            0x3c: {'name': 'ACCEL_XOUT_L', 'alias': 'Accelerometer Measurements - X-axis (Low Byte)'},
+            0x3d: {'name': 'ACCEL_YOUT_H', 'alias': 'Accelerometer Measurements - Y-axis (High Byte)'},
+            0x3e: {'name': 'ACCEL_YOUT_L', 'alias': 'Accelerometer Measurements - Y-axis (Low Byte)'},
+            0x3f: {'name': 'ACCEL_ZOUT_H', 'alias': 'Accelerometer Measurements - Z-axis (High Byte)'},
             0x40: {'name': 'ACCEL_ZOUT_L', 'alias': 'Accelerometer Measurements - Z-axis (Low Byte)'},
             0x41: {'name': 'TEMP_OUT_H', 'alias': 'Temperature Measurement (High Byte)'},
             0x42: {'name': 'TEMP_OUT_L', 'alias': 'Temperature Measurement (Low Byte)'},
@@ -130,12 +130,12 @@ class Hla(HighLevelAnalyzer):
             0x47: {'name': 'GYRO_ZOUT_H', 'alias': 'Gyroscope Measurements - Z-axis (High Byte)'},
             0x48: {'name': 'GYRO_ZOUT_L', 'alias': 'Gyroscope Measurements - Z-axis (Low Byte)'},
             0x49: {'name': 'EXT_SENS_DATA_00', 'alias': 'External Sensor Data 00'},
-            0x4A: {'name': 'EXT_SENS_DATA_01', 'alias': 'External Sensor Data 01'},
-            0x4B: {'name': 'EXT_SENS_DATA_02', 'alias': 'External Sensor Data 02'},
-            0x4C: {'name': 'EXT_SENS_DATA_03', 'alias': 'External Sensor Data 03'},
-            0x4D: {'name': 'EXT_SENS_DATA_04', 'alias': 'External Sensor Data 04'},
-            0x4E: {'name': 'EXT_SENS_DATA_05', 'alias': 'External Sensor Data 05'},
-            0x4F: {'name': 'EXT_SENS_DATA_06', 'alias': 'External Sensor Data 06'},
+            0x4a: {'name': 'EXT_SENS_DATA_01', 'alias': 'External Sensor Data 01'},
+            0x4b: {'name': 'EXT_SENS_DATA_02', 'alias': 'External Sensor Data 02'},
+            0x4c: {'name': 'EXT_SENS_DATA_03', 'alias': 'External Sensor Data 03'},
+            0x4d: {'name': 'EXT_SENS_DATA_04', 'alias': 'External Sensor Data 04'},
+            0x4e: {'name': 'EXT_SENS_DATA_05', 'alias': 'External Sensor Data 05'},
+            0x4f: {'name': 'EXT_SENS_DATA_06', 'alias': 'External Sensor Data 06'},
             0x50: {'name': 'EXT_SENS_DATA_07', 'alias': 'External Sensor Data 07'},
             0x51: {'name': 'EXT_SENS_DATA_08', 'alias': 'External Sensor Data 08'},
             0x52: {'name': 'EXT_SENS_DATA_09', 'alias': 'External Sensor Data 09'},
@@ -146,12 +146,12 @@ class Hla(HighLevelAnalyzer):
             0x57: {'name': 'EXT_SENS_DATA_14', 'alias': 'External Sensor Data 14'},
             0x58: {'name': 'EXT_SENS_DATA_15', 'alias': 'External Sensor Data 15'},
             0x59: {'name': 'EXT_SENS_DATA_16', 'alias': 'External Sensor Data 16'},
-            0x5A: {'name': 'EXT_SENS_DATA_17', 'alias': 'External Sensor Data 17'},
-            0x5B: {'name': 'EXT_SENS_DATA_18', 'alias': 'External Sensor Data 18'},
-            0x5C: {'name': 'EXT_SENS_DATA_19', 'alias': 'External Sensor Data 19'},
-            0x5D: {'name': 'EXT_SENS_DATA_20', 'alias': 'External Sensor Data 20'},
-            0x5E: {'name': 'EXT_SENS_DATA_21', 'alias': 'External Sensor Data 21'},
-            0x5F: {'name': 'EXT_SENS_DATA_22', 'alias': 'External Sensor Data 22'},
+            0x5a: {'name': 'EXT_SENS_DATA_17', 'alias': 'External Sensor Data 17'},
+            0x5b: {'name': 'EXT_SENS_DATA_18', 'alias': 'External Sensor Data 18'},
+            0x5c: {'name': 'EXT_SENS_DATA_19', 'alias': 'External Sensor Data 19'},
+            0x5d: {'name': 'EXT_SENS_DATA_20', 'alias': 'External Sensor Data 20'},
+            0x5e: {'name': 'EXT_SENS_DATA_21', 'alias': 'External Sensor Data 21'},
+            0x5f: {'name': 'EXT_SENS_DATA_22', 'alias': 'External Sensor Data 22'},
             0x60: {'name': 'EXT_SENS_DATA_23', 'alias': 'External Sensor Data 23'},
             0x63: {'name': 'I2C_SLV0_DO', 'alias': 'I2C Slave 0 Data Out'},
             0x64: {'name': 'I2C_SLV1_DO', 'alias': 'I2C Slave 1 Data Out'},
@@ -159,8 +159,8 @@ class Hla(HighLevelAnalyzer):
             0x66: {'name': 'I2C_SLV3_DO', 'alias': 'I2C Slave 3 Data Out'},
             0x67: {'name': 'I2C_MST_DELAY_CTRL', 'alias': 'I2C Master Delay Control'},
             0x68: {'name': 'SIGNAL_PATH_RESET', 'alias': 'Signal Path Reset'},
-            0x6A: {'name': 'USER_CTRL', 'alias': 'User Control'},
-            0x6B: {'name': 'PWR_MGMT_1', 'alias': 'Power Management 1', 'fields': {
+            0x6a: {'name': 'USER_CTRL', 'alias': 'User Control'},
+            0x6b: {'name': 'PWR_MGMT_1', 'alias': 'Power Management 1', 'fields': {
                 'CLKSEL': {
                     0: 'Internal 8MHz oscillator',
                     1: 'PLL with X axis gyroscope reference',
@@ -172,7 +172,7 @@ class Hla(HighLevelAnalyzer):
                     7: 'Stops the clock and keeps the timing generator in reset'
                 }
             }},
-            0x6C: {'name': 'PWR_MGMT_2', 'alias': 'Power Management 2', 'fields': {
+            0x6c: {'name': 'PWR_MGMT_2', 'alias': 'Power Management 2', 'fields': {
                 'LP_WAKE_CTRL': {
                     0: '1.25 Hz',
                     1: '5 Hz',
@@ -180,9 +180,9 @@ class Hla(HighLevelAnalyzer):
                     3: '40 Hz'
                 }
             }},
-            0x6D: {'name': 'RA_BANK_SEL', 'alias': 'Memory Bank Select'},
-            0x6E: {'name': 'RA_MEM_START_ADDR', 'alias': 'Memory Bank Start Address'},
-            0x6F: {'name': 'RA_MEM_R_W', 'alias': 'Memory Bank Read/Write'},
+            0x6d: {'name': 'RA_BANK_SEL', 'alias': 'Memory Bank Select'},
+            0x6e: {'name': 'RA_MEM_START_ADDR', 'alias': 'Memory Bank Start Address'},
+            0x6f: {'name': 'RA_MEM_R_W', 'alias': 'Memory Bank Read/Write'},
             0x70: {'name': 'RA_DMP_CFG_1', 'alias': 'DMP Configuration 1'},
             0x71: {'name': 'RA_DMP_CFG_2', 'alias': 'DMP Configuration 2'},
             0x72: {'name': 'FIFO_COUNTH', 'alias': 'FIFO Count Registers (High Byte)'},
@@ -197,7 +197,7 @@ class Hla(HighLevelAnalyzer):
             self.read_write = 'Read' if frame.data['read'] else 'Write'
             self.state = 'WAIT_REGISTER' if self.read_write == 'Write' else 'WAIT_DATA'
             self.burst_data = []
-            self.id = ''
+
             return AnalyzerFrame('address', frame.start_time, frame.end_time, {
                 'address': hex(self.address),
                 'read_write': self.read_write
@@ -207,6 +207,7 @@ class Hla(HighLevelAnalyzer):
             data = frame.data['data'][0]
 
             if self.state == 'WAIT_REGISTER':
+                
                 if data in self.registers:
                     self.current_register = self.registers[data]['alias']
                     self.id = data
